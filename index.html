@@ -571,23 +571,44 @@
         <script>
             $(document).ready(function() {
 
+                /*
+                    Inicia la tabla
+                 */
 
                 $('#example').DataTable();
 
+                /*
+                    Funcion para verificar que el check esta marcado o no
+                    Parametros: Id del input
+                 */
                 var isChecked = function(id){
                     return $(id).is(':checked') ? 1 : 0;
                 };
 
+                /*
+                    Esta es la que marca todos los checkbox, busca todas las rows que estan visibles y las marca o no dependiendo
+                    del valor del checkbox que esta afuera, o dentro de un header
+                 */
                 var markSeletion = function () {
 
                     var table = $('#example').DataTable();
                     var p = table.rows({ page: 'current' }).nodes();
 
                     p.each(function (item) {
-                       
+
+                        /*
+                               Recorriendo cada fila
+                         */
                         var element = $(item);
+                        /*
+                            Obteniendo el checkbox de cada una
+                         */
                         var check = element.find('.chk-row')[0];
 
+                        /*
+                            Verificando si esta marcado el checkbox padre o uno ajeno a la tabla
+                            (cambiar ID)
+                         */
                         if(isChecked('#chk-all')){
                             $(check).prop( "checked", true );
                         } else {
@@ -598,24 +619,38 @@
                     
                     
                 };
+                /*
+                    Llamar a la funcion que marca los checkbox cada vez que el checkbox padre cambie
+                 */
                 $('#chk-all').on('change', function () {
                    markSeletion();
                 });
 
 
 
+                /*
+                    Llamar a la funcion por cada cambio de pagina (Cuando se presiona el boton NEXT o PREV de la paginacion)
+                 */
                 $('#example').on( 'page.dt', function () {
 
 
                     markSeletion();
 
                 } );
+
+                /*
+                    Llamar a a la función cada vez que se actualize la tabla o se marque una pagina cualquiera
+                 */
+
                 $('#example').on( 'draw.dt', function () {
 
 
                     markSeletion();
                 } );
 
+                /*
+                    Llamar a la funcion cada vez que se haga una busqueda, ya que vuelve a renderizar
+                 */
 
                 $('#example').on('search.dt', function() {
                     
